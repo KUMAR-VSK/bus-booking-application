@@ -29,7 +29,7 @@ const SeatSelection = () => {
           column: col,
           isBooked: isBooked,
           isVIP: isVIP,
-          price: isVIP ? 15 : 10
+          price: isVIP ? 599 : 299 // INR pricing
         });
       }
     }
@@ -86,10 +86,10 @@ const SeatSelection = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading seat layout...</p>
+      <div className="page-container flex-center">
+        <div className="loading-container">
+          <div className="spinner"></div>
+          <p className="text-gray-600">Loading seat layout...</p>
         </div>
       </div>
     );
@@ -100,57 +100,60 @@ const SeatSelection = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="page-container page-shell">
+      <div className="page-content">
         {/* Header */}
-        <div className="bg-white shadow-sm rounded-lg p-4 mb-6">
+        <div className="card mb-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <button
                 onClick={handleBack}
-                className="flex items-center text-gray-600 hover:text-gray-900"
+                className="btn btn-secondary"
               >
                 <ArrowLeftIcon className="h-5 w-5 mr-1" />
                 Back
               </button>
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900">Select Seats</h1>
-                <p className="text-gray-600">
-                  {selectedBus.operator} • {selectedBus.busNumber}
-                </p>
-              </div>
+              <h1 className="text-2xl font-bold text-gray-900">Select Your Seats</h1>
+            </div>
+            <div className="text-sm text-gray-600">
+              {selectedBus.source} → {selectedBus.destination}
             </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Seat Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Seat Selection */}
           <div className="lg:col-span-2">
-            <div className="bg-white rounded-lg shadow p-6">
-              {/* Bus Front Indicator */}
-              <div className="mb-6">
-                <div className="bg-gray-200 rounded-t-lg p-4 text-center">
-                  <div className="text-sm font-medium text-gray-600">FRONT</div>
-                </div>
+            <div className="card">
+              <div className="card-header">
+                <h2 className="card-title">
+                  {selectedBus.operator} - {selectedBus.busNumber}
+                </h2>
+                <p className="card-description">
+                  {selectedBus.source} → {selectedBus.destination} • {selectedBus.departureTime} - {selectedBus.arrivalTime}
+                </p>
               </div>
 
               {/* Legend */}
-              <div className="flex flex-wrap gap-4 mb-6 justify-center">
-                <div className="flex items-center">
-                  <div className="seat available w-6 h-6 mr-2"></div>
-                  <span className="text-sm text-gray-600">Available</span>
-                </div>
-                <div className="flex items-center">
-                  <div className="seat selected w-6 h-6 mr-2"></div>
-                  <span className="text-sm text-gray-600">Selected</span>
-                </div>
-                <div className="flex items-center">
-                  <div className="seat booked w-6 h-6 mr-2"></div>
-                  <span className="text-sm text-gray-600">Booked</span>
-                </div>
-                <div className="flex items-center">
-                  <div className="seat vip available w-6 h-6 mr-2"></div>
-                  <span className="text-sm text-gray-600">VIP</span>
+              <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+                <h3 className="text-sm font-medium text-gray-700 mb-3">Seat Legend</h3>
+                <div className="flex flex-wrap gap-4">
+                  <div className="flex items-center">
+                    <div className="seat available w-6 h-6 mr-2"></div>
+                    <span className="text-sm text-gray-600">Available</span>
+                  </div>
+                  <div className="flex items-center">
+                    <div className="seat selected w-6 h-6 mr-2"></div>
+                    <span className="text-sm text-gray-600">Selected</span>
+                  </div>
+                  <div className="flex items-center">
+                    <div className="seat booked w-6 h-6 mr-2"></div>
+                    <span className="text-sm text-gray-600">Booked</span>
+                  </div>
+                  <div className="flex items-center">
+                    <div className="seat vip available w-6 h-6 mr-2"></div>
+                    <span className="text-sm text-gray-600">VIP</span>
+                  </div>
                 </div>
               </div>
 
@@ -162,7 +165,7 @@ const SeatSelection = () => {
                     onClick={() => handleSeatClick(seat)}
                     disabled={seat.isBooked}
                     className={getSeatClass(seat)}
-                    title={`Seat ${seat.number} ${seat.isVIP ? '(VIP)' : ''} - $${seat.price}`}
+                    title={`Seat ${seat.number} ${seat.isVIP ? '(VIP)' : ''} - ₹${seat.price}`}
                   >
                     {seat.number}
                   </button>
@@ -178,7 +181,7 @@ const SeatSelection = () => {
 
           {/* Booking Summary */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-lg shadow p-6 sticky top-6">
+            <div className="card sticky top-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Booking Summary</h3>
               
               {/* Bus Details */}
@@ -198,66 +201,61 @@ const SeatSelection = () => {
 
               {/* Selected Seats */}
               <div className="border-b pb-4 mb-4">
-                <div className="text-sm text-gray-600 mb-2">Selected Seats ({selectedSeats.length})</div>
+                <div className="text-sm text-gray-600 mb-2">Selected Seats</div>
                 {selectedSeats.length === 0 ? (
-                  <div className="text-gray-500 text-sm">No seats selected</div>
+                  <p className="text-gray-500 text-sm">No seats selected</p>
                 ) : (
                   <div className="space-y-1">
-                    {selectedSeats.map(seatNumber => {
-                      const seat = seats.find(s => s.number === seatNumber);
-                      return (
-                        <div key={seatNumber} className="flex justify-between text-sm">
-                          <span>Seat {seatNumber} {seat?.isVIP && '(VIP)'}</span>
-                          <span>${seat?.price || 10}</span>
-                        </div>
-                      );
-                    })}
+                    {selectedSeats.map((seat) => (
+                      <div key={seat} className="flex justify-between text-sm">
+                        <span>Seat {seat} {seats.find(s => s.number === seat)?.isVIP && '(VIP)'}</span>
+                        <span>₹{seats.find(s => s.number === seat)?.price}</span>
+                      </div>
+                    ))}
                   </div>
                 )}
               </div>
 
               {/* Price Breakdown */}
-              <div className="space-y-2 mb-4">
+              <div className="space-y-2 mb-6">
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Base Price</span>
-                  <span>${selectedSeats.length * 10}</span>
+                  <span>Base Price ({selectedSeats.length} seats)</span>
+                  <span>₹{calculateTotalPrice()}</span>
                 </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">VIP Charges</span>
-                  <span>
-                    ${selectedSeats.reduce((total, seatNumber) => {
-                      const seat = seats.find(s => s.number === seatNumber);
-                      return total + (seat?.isVIP ? 5 : 0);
-                    }, 0)}
-                  </span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Service Fee</span>
-                  <span>$2</span>
-                </div>
-                <div className="border-t pt-2 flex justify-between font-semibold">
-                  <span>Total</span>
-                  <span>${calculateTotalPrice() + (selectedSeats.length > 0 ? 2 : 0)}</span>
+                <div className="border-t pt-2">
+                  <div className="flex justify-between font-semibold">
+                    <span>Total</span>
+                    <span>₹{calculateTotalPrice()}</span>
+                  </div>
                 </div>
               </div>
 
-              {error && (
-                <div className="bg-red-50 border border-red-200 text-red-600 px-3 py-2 rounded text-sm mb-4">
-                  {error}
-                </div>
-              )}
-
-              <button
-                onClick={handleProceed}
-                disabled={selectedSeats.length === 0}
-                className={`w-full py-3 px-4 rounded-md font-medium transition-colors ${
-                  selectedSeats.length === 0
-                    ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                    : 'bg-blue-600 text-white hover:bg-blue-700'
-                }`}
-              >
-                Proceed to Payment
-              </button>
+              {/* Action Buttons */}
+              <div className="space-y-3">
+                {error && (
+                  <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-md">
+                    {error}
+                  </div>
+                )}
+                <button
+                  onClick={handleProceed}
+                  disabled={selectedSeats.length === 0}
+                  className={`btn btn-full ${
+                    selectedSeats.length === 0
+                      ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                      : 'btn-primary'
+                  }`}
+                >
+                  Proceed to Payment
+                </button>
+                
+                <button
+                  onClick={() => navigate('/buses')}
+                  className="btn btn-secondary btn-full"
+                >
+                  Back to Bus List
+                </button>
+              </div>
             </div>
           </div>
         </div>

@@ -133,28 +133,37 @@ const BusManagement = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 page-shell">
       {/* Header */}
-      <div className="bg-white shadow-sm">
+      <div className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between py-4">
             <div className="flex items-center space-x-4">
               <button
                 onClick={() => navigate('/manager/dashboard')}
-                className="flex items-center text-gray-600 hover:text-gray-900"
+                className="flex items-center text-gray-600 hover:text-gray-900 hover:bg-gray-100 px-3 py-2 rounded-lg transition-colors"
               >
-                <ArrowLeftIcon className="h-5 w-5 mr-1" />
+                <ArrowLeftIcon className="h-5 w-5 mr-2" />
                 Back to Dashboard
               </button>
-              <h1 className="text-2xl font-bold text-gray-900">Bus Management</h1>
+              <div className="h-6 w-px bg-gray-300"></div>
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900">Bus Management</h1>
+                <p className="text-sm text-gray-500">Manage your bus fleet and schedules</p>
+              </div>
             </div>
-            <button
-              onClick={handleAddBus}
-              className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors flex items-center"
-            >
-              <PlusIcon className="h-5 w-5 mr-2" />
-              Add New Bus
-            </button>
+            <div className="flex items-center space-x-3">
+              <div className="text-sm text-gray-500">
+                {filteredBuses.length} {filteredBuses.length === 1 ? 'bus' : 'buses'} found
+              </div>
+              <button
+                onClick={handleAddBus}
+                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center shadow-sm hover:shadow-md"
+              >
+                <PlusIcon className="h-5 w-5 mr-2" />
+                Add New Bus
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -209,7 +218,7 @@ const BusManagement = () => {
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Schedule
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">
                     Driver
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -222,9 +231,9 @@ const BusManagement = () => {
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {filteredBuses.map((bus) => (
-                  <tr key={bus.id} className="hover:bg-gray-50">
+                  <tr key={bus.id} className="hover:bg-gray-50 transition-colors">
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div>
+                      <div className="flex flex-col">
                         <div className="text-sm font-medium text-gray-900">{bus.busNumber}</div>
                         <div className="text-sm text-gray-500">{bus.operator}</div>
                         <div className="text-xs text-gray-400">{bus.type} • {bus.capacity} seats</div>
@@ -236,8 +245,8 @@ const BusManagement = () => {
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm text-gray-900">{bus.departureTime} - {bus.arrivalTime}</div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div>
+                    <td className="px-6 py-4 whitespace-nowrap hidden sm:table-cell">
+                      <div className="flex flex-col">
                         <div className="text-sm font-medium text-gray-900">{bus.driver}</div>
                         <div className="text-xs text-gray-500">{bus.contact}</div>
                       </div>
@@ -251,24 +260,24 @@ const BusManagement = () => {
                       <div className="flex items-center space-x-2">
                         <button
                           onClick={() => handleViewDetails(bus)}
-                          className="text-blue-600 hover:text-blue-900"
+                          className="text-blue-600 hover:text-blue-900 p-1 rounded hover:bg-blue-50 transition-colors"
                           title="View Details"
                         >
-                          <EyeIcon className="h-5 w-5" />
+                          <EyeIcon className="h-4 w-4" />
                         </button>
                         <button
                           onClick={() => handleEditBus(bus)}
-                          className="text-green-600 hover:text-green-900"
+                          className="text-green-600 hover:text-green-900 p-1 rounded hover:bg-green-50 transition-colors"
                           title="Edit Bus"
                         >
-                          <PencilIcon className="h-5 w-5" />
+                          <PencilIcon className="h-4 w-4" />
                         </button>
                         <button
                           onClick={() => handleDeleteBus(bus.id)}
-                          className="text-red-600 hover:text-red-900"
+                          className="text-red-600 hover:text-red-900 p-1 rounded hover:bg-red-50 transition-colors"
                           title="Delete Bus"
                         >
-                          <TrashIcon className="h-5 w-5" />
+                          <TrashIcon className="h-4 w-4" />
                         </button>
                       </div>
                     </td>
@@ -279,8 +288,14 @@ const BusManagement = () => {
           </div>
           
           {filteredBuses.length === 0 && (
-            <div className="text-center py-8">
-              <p className="text-gray-500">No buses found matching your criteria.</p>
+            <div className="text-center py-12">
+              <div className="text-gray-400 mb-2">
+                <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+              </div>
+              <p className="text-gray-500 text-lg font-medium">No buses found</p>
+              <p className="text-gray-400 text-sm mt-1">Try adjusting your search or filter criteria</p>
             </div>
           )}
         </div>
@@ -288,79 +303,160 @@ const BusManagement = () => {
 
       {/* Add/Edit Bus Modal */}
       {showAddModal && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-          <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div 
+          className="modal-overlay"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              setShowAddModal(false);
+            }
+          }}
+        >
+          <div className="modal-content w-full max-w-2xl" onClick={(e) => e.stopPropagation()}>
             <div className="mt-3">
               <h3 className="text-lg font-medium text-gray-900 mb-4">
                 {editingBus ? 'Edit Bus' : 'Add New Bus'}
               </h3>
               
-              <form className="space-y-4">
+              <form id="bus-form" className="space-y-4" onSubmit={(e) => {
+                e.preventDefault();
+                // Handle form submission here
+                setShowAddModal(false);
+              }}>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Bus Number</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Bus Number</label>
                   <input
                     type="text"
                     defaultValue={editingBus?.busNumber}
-                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     placeholder="BUS-1001"
+                    required
                   />
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Operator</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Operator</label>
                   <input
                     type="text"
                     defaultValue={editingBus?.operator}
-                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     placeholder="Express Lines"
+                    required
                   />
                 </div>
                 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Type</label>
-                  <select
-                    defaultValue={editingBus?.type}
-                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="Standard">Standard</option>
-                    <option value="Premium">Premium</option>
-                    <option value="Luxury">Luxury</option>
-                  </select>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
+                    <select
+                      defaultValue={editingBus?.type || 'Standard'}
+                      className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      required
+                    >
+                      <option value="Standard">Standard</option>
+                      <option value="Premium">Premium</option>
+                      <option value="Luxury">Luxury</option>
+                    </select>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Capacity</label>
+                    <input
+                      type="number"
+                      defaultValue={editingBus?.capacity}
+                      className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      placeholder="45"
+                      min="1"
+                      max="60"
+                      required
+                    />
+                  </div>
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Capacity</label>
-                  <input
-                    type="number"
-                    defaultValue={editingBus?.capacity}
-                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="45"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Route</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Route</label>
                   <input
                     type="text"
                     defaultValue={editingBus?.route}
-                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     placeholder="New York → Los Angeles"
+                    required
                   />
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Departure Time</label>
+                    <input
+                      type="time"
+                      defaultValue={editingBus?.departureTime}
+                      className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      required
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Arrival Time</label>
+                    <input
+                      type="time"
+                      defaultValue={editingBus?.arrivalTime}
+                      className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      required
+                    />
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Driver Name</label>
+                    <input
+                      type="text"
+                      defaultValue={editingBus?.driver}
+                      className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      placeholder="John Doe"
+                      required
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Contact Number</label>
+                    <input
+                      type="tel"
+                      defaultValue={editingBus?.contact}
+                      className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      placeholder="+1 (555) 123-4567"
+                      required
+                    />
+                  </div>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                  <select
+                    defaultValue={editingBus?.status || 'active'}
+                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    required
+                  >
+                    <option value="active">Active</option>
+                    <option value="maintenance">Maintenance</option>
+                    <option value="inactive">Inactive</option>
+                  </select>
                 </div>
               </form>
               
-              <div className="flex justify-end space-x-3 mt-6">
+              <div className="btn-group justify-end mt-6">
                 <button
+                  type="button"
                   onClick={() => setShowAddModal(false)}
-                  className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition-colors"
+                  className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors font-medium"
                 >
                   Cancel
                 </button>
                 <button
-                  onClick={() => setShowAddModal(false)}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                  type="submit"
+                  form="bus-form"
+                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors font-medium"
                 >
-                  {editingBus ? 'Update' : 'Add'} Bus
+                  {editingBus ? 'Update Bus' : 'Add Bus'}
                 </button>
               </div>
             </div>

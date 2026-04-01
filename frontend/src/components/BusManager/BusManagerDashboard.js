@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { 
-  BusIcon,
+  TruckIcon,
   UserGroupIcon,
   CurrencyDollarIcon,
   CalendarIcon,
@@ -105,7 +105,7 @@ const BusManagerDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 page-shell">
       {/* Header */}
       <div className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -149,7 +149,7 @@ const BusManagerDashboard = () => {
           <div className="bg-white rounded-lg shadow p-6">
             <div className="flex items-center">
               <div className="bg-blue-100 rounded-full p-3">
-                <BusIcon className="h-8 w-8 text-blue-600" />
+                <TruckIcon className="h-8 w-8 text-blue-600" />
               </div>
               <div className="ml-4">
                 <div className="text-2xl font-bold text-gray-900">{stats.totalBuses}</div>
@@ -250,7 +250,7 @@ const BusManagerDashboard = () => {
                   className="w-full flex items-center justify-between p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
                 >
                   <div className="flex items-center">
-                    <BusIcon className="h-5 w-5 text-gray-600 mr-3" />
+                    <TruckIcon className="h-5 w-5 text-gray-600 mr-3" />
                     <span className="font-medium text-gray-900">Manage Buses</span>
                   </div>
                   <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">

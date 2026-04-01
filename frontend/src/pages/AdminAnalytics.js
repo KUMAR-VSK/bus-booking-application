@@ -3,11 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { 
   ArrowLeftIcon,
   ChartBarIcon,
-  TrendingUpIcon,
-  TrendingDownIcon,
+  ArrowTrendingUpIcon,
+  ArrowTrendingDownIcon,
   CurrencyDollarIcon,
   UserGroupIcon,
-  BusIcon,
+  TruckIcon,
   CalendarIcon
 } from '@heroicons/react/24/outline';
 
@@ -88,7 +88,7 @@ const AdminAnalytics = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 page-shell">
       {/* Header */}
       <div className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -128,7 +128,7 @@ const AdminAnalytics = () => {
                 <p className="text-sm font-medium text-gray-600">Total Revenue</p>
                 <p className="text-2xl font-bold text-gray-900">${analytics.overview.totalRevenue.toLocaleString()}</p>
                 <div className="flex items-center mt-2">
-                  <TrendingUpIcon className="h-4 w-4 text-green-500 mr-1" />
+                  <ArrowTrendingUpIcon className="h-4 w-4 text-green-500 mr-1" />
                   <span className="text-sm text-green-600">+{analytics.overview.revenueGrowth}%</span>
                 </div>
               </div>
@@ -142,7 +142,7 @@ const AdminAnalytics = () => {
                 <p className="text-sm font-medium text-gray-600">Total Bookings</p>
                 <p className="text-2xl font-bold text-gray-900">{analytics.overview.totalBookings.toLocaleString()}</p>
                 <div className="flex items-center mt-2">
-                  <TrendingUpIcon className="h-4 w-4 text-green-500 mr-1" />
+                  <ArrowTrendingUpIcon className="h-4 w-4 text-green-500 mr-1" />
                   <span className="text-sm text-green-600">+{analytics.overview.bookingGrowth}%</span>
                 </div>
               </div>
@@ -156,7 +156,7 @@ const AdminAnalytics = () => {
                 <p className="text-sm font-medium text-gray-600">Total Users</p>
                 <p className="text-2xl font-bold text-gray-900">{analytics.overview.totalUsers.toLocaleString()}</p>
                 <div className="flex items-center mt-2">
-                  <TrendingUpIcon className="h-4 w-4 text-green-500 mr-1" />
+                  <ArrowTrendingUpIcon className="h-4 w-4 text-green-500 mr-1" />
                   <span className="text-sm text-green-600">+{analytics.overview.userGrowth}%</span>
                 </div>
               </div>
@@ -170,11 +170,11 @@ const AdminAnalytics = () => {
                 <p className="text-sm font-medium text-gray-600">Bus Utilization</p>
                 <p className="text-2xl font-bold text-gray-900">{analytics.overview.busUtilization}%</p>
                 <div className="flex items-center mt-2">
-                  <TrendingDownIcon className="h-4 w-4 text-red-500 mr-1" />
+                  <ArrowTrendingDownIcon className="h-4 w-4 text-red-500 mr-1" />
                   <span className="text-sm text-red-600">-2.1%</span>
                 </div>
               </div>
-              <BusIcon className="h-8 w-8 text-yellow-600" />
+              <TruckIcon className="h-8 w-8 text-yellow-600" />
             </div>
           </div>
         </div>

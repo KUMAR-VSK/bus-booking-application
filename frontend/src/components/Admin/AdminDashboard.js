@@ -3,12 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { 
   UserGroupIcon,
-  BusIcon,
+  TruckIcon,
   CurrencyDollarIcon,
   ChartBarIcon,
   ArrowRightOnRectangleIcon,
-  UsersIcon,
-  TrendingUpIcon,
+  ArrowTrendingUpIcon,
+  ArrowTrendingDownIcon,
   CalendarIcon
 } from '@heroicons/react/24/outline';
 
@@ -43,7 +43,7 @@ const AdminDashboard = () => {
           type: 'user',
           message: 'New user registered: John Doe',
           time: '10 minutes ago',
-          icon: UsersIcon
+          icon: UserGroupIcon
         },
         {
           id: 2,
@@ -57,14 +57,14 @@ const AdminDashboard = () => {
           type: 'bus',
           message: 'New bus added: Express Lines - BUS-1050',
           time: '1 hour ago',
-          icon: BusIcon
+          icon: TruckIcon
         },
         {
           id: 4,
           type: 'revenue',
           message: 'Revenue milestone: $150K reached',
           time: '2 hours ago',
-          icon: TrendingUpIcon
+          icon: ArrowTrendingUpIcon
         }
       ]);
       
@@ -105,7 +105,7 @@ const AdminDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 page-shell">
       {/* Header */}
       <div className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -158,7 +158,7 @@ const AdminDashboard = () => {
           <div className="bg-white rounded-lg shadow p-6">
             <div className="flex items-center">
               <div className="bg-green-100 rounded-full p-3">
-                <BusIcon className="h-8 w-8 text-green-600" />
+                <TruckIcon className="h-8 w-8 text-green-600" />
               </div>
               <div className="ml-4">
                 <div className="text-2xl font-bold text-gray-900">{stats.totalBuses}</div>
@@ -194,7 +194,7 @@ const AdminDashboard = () => {
           <div className="bg-white rounded-lg shadow p-6">
             <div className="flex items-center">
               <div className="bg-indigo-100 rounded-full p-3">
-                <TrendingUpIcon className="h-8 w-8 text-indigo-600" />
+                <ArrowTrendingUpIcon className="h-8 w-8 text-indigo-600" />
               </div>
               <div className="ml-4">
                 <div className="text-2xl font-bold text-gray-900">+{stats.monthlyGrowth}%</div>
@@ -265,7 +265,7 @@ const AdminDashboard = () => {
                   className="w-full flex items-center justify-between p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
                 >
                   <div className="flex items-center">
-                    <BusIcon className="h-5 w-5 text-gray-600 mr-3" />
+                    <TruckIcon className="h-5 w-5 text-gray-600 mr-3" />
                     <span className="font-medium text-gray-900">Manage Buses</span>
                   </div>
                   <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
