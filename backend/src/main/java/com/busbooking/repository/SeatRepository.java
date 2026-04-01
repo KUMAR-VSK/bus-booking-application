@@ -18,4 +18,6 @@ public interface SeatRepository extends JpaRepository<Seat, Long> {
 
     @Query("SELECT s FROM Seat s WHERE s.seatId IN :seatIds AND s.isAvailable = true")
     List<Seat> findAvailableSeatsBySeatIds(@Param("seatIds") List<Long> seatIds);
+
+    List<Seat> findByBusBusIdAndSeatNumberIn(Long busId, List<String> seatNumbers);
 }

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -50,22 +51,20 @@ public class BookingService {
         }
 
         // Create booking
-        Booking booking = Booking.builder()
-                .user(user)
-                .bus(bus)
-                .bookingDate(bookingRequestDto.getBookingDate())
-                .totalAmount(calculateTotalAmount(seats))
-                .status("BOOKED")
-                .build();
+        Booking booking = new Booking();
+        booking.setUser(user);
+        booking.setBus(bus);
+        booking.setBookingDate(bookingRequestDto.getBookingDate());
+        booking.setTotalAmount(calculateTotalAmount(seats));
+        booking.setStatus("BOOKED");
 
         Booking savedBooking = bookingRepository.save(booking);
 
         // Create booking seats and mark seats as unavailable
         for (Seat seat : seats) {
-            BookingSeat bookingSeat = BookingSeat.builder()
-                    .booking(savedBooking)
-                    .seat(seat)
-                    .build();
+            BookingSeat bookingSeat = new BookingSeat();
+            bookingSeat.setBooking(savedBooking);
+            bookingSeat.setSeat(seat);
             bookingSeatRepository.save(bookingSeat);
 
             // Mark seat as unavailable
@@ -81,6 +80,12 @@ public class BookingService {
         return bookings.stream()
                 .map(this::convertToResponseDto)
                 .collect(Collectors.toList());
+    }
+
+    public BookingResponseDto getBookingById(Long bookingId) {
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new CustomException("Booking not found with id: " + bookingId));
+        return convertToResponseDto(booking);
     }
 
     public BookingResponseDto cancelBooking(Long bookingId) {
@@ -104,6 +109,31 @@ public class BookingService {
         }
 
         return convertToResponseDto(booking);
+    }
+
+    public Map<String, Object> getBookingAnalytics() {
+        List<Booking> allBookings = bookingRepository.findAll();
+        
+        long totalBookings = allBookings.size();
+        long bookedCount = allBookings.stream().filter(b -> "BOOKED".equals(b.getStatus())).count();
+        long cancelledCount = allBookings.stream().filter(b -> "CANCELLED".equals(b.getStatus())).count();
+        double totalRevenue = allBookings.stream()
+                .filter(b -> "BOOKED".equals(b.getStatus()))
+                .mapToDouble(Booking::getTotalAmount)
+                .sum();
+        
+        return Map.of(
+            "totalBookings", totalBookings,
+            "bookedCount", bookedCount,
+            "cancelledCount", cancelledCount,
+            "totalRevenue", totalRevenue
+        );
+    }
+
+    public boolean isOwner(Long userId, String email) {
+        return userRepository.findById(userId)
+                .map(user -> user.getEmail().equals(email))
+                .orElse(false);
     }
 
     private Double calculateTotalAmount(List<Seat> seats) {

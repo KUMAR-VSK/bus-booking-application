@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.List;
 
 @Component
 public class JwtUtil {
@@ -18,7 +19,7 @@ public class JwtUtil {
     @Value("${app.jwt.expiration:86400000}")
     private int jwtExpiration;
 
-    public String generateToken(String email, Long userId) {
+    public String generateToken(String email, Long userId, String role) {
         SecretKey key = getSigningKey();
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtExpiration);
@@ -26,6 +27,7 @@ public class JwtUtil {
         return Jwts.builder()
                 .subject(email)
                 .claim("userId", userId)
+                .claim("role", role)
                 .issuedAt(now)
                 .expiration(expiryDate)
                 .signWith(key)
@@ -50,6 +52,16 @@ public class JwtUtil {
                 .parseSignedClaims(token)
                 .getPayload()
                 .get("userId", Long.class);
+    }
+
+    public String getRoleFromToken(String token) {
+        SecretKey key = getSigningKey();
+        return Jwts.parser()
+                .verifyWith(key)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .get("role", String.class);
     }
 
     public boolean validateToken(String token) {

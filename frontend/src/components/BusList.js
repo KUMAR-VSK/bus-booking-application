@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useBus } from '../context/BusContext';
-import { ClockIcon, UserGroupIcon, StarIcon, ArrowLeftIcon } from '@heroicons/react/24/outline';
+import { ClockIcon, ArrowLeftIcon, ArrowRightIcon, TruckIcon } from '@heroicons/react/24/outline';
+
 
 const BusList = () => {
   const [buses, setBuses] = useState([]);
@@ -11,22 +12,23 @@ const BusList = () => {
     busType: 'all',
     departureTime: 'all'
   });
-  
+ 
   const { searchCriteria, selectBus } = useBus();
   const navigate = useNavigate();
+
 
   // Mock bus data generator
   const generateMockBuses = () => {
     const busTypes = ['Standard', 'Premium', 'Luxury', 'Sleeper'];
     const operators = ['Express Lines', 'Swift Transit', 'Comfort Coaches', 'Royal Bus', 'Fast Track'];
-    
+   
     const mockBuses = [];
     for (let i = 1; i <= 8; i++) {
       const departureHour = 6 + Math.floor(Math.random() * 16);
       const departureMinute = Math.random() > 0.5 ? '00' : '30';
       const duration = 4 + Math.floor(Math.random() * 8);
-      const price = 25 + Math.floor(Math.random() * 75);
-      
+      const price = 299 + Math.floor(Math.random() * 2000); // INR pricing
+     
       mockBuses.push({
         id: i,
         operator: operators[Math.floor(Math.random() * operators.length)],
@@ -42,9 +44,10 @@ const BusList = () => {
         amenities: ['WiFi', 'AC', 'Charging Ports', 'Entertainment'].filter(() => Math.random() > 0.3)
       });
     }
-    
+   
     return mockBuses.sort((a, b) => a.departureTime.localeCompare(b.departureTime));
   };
+
 
   useEffect(() => {
     // Simulate API call
@@ -54,15 +57,16 @@ const BusList = () => {
     }, 1000);
   }, [searchCriteria]);
 
+
   const filteredBuses = buses.filter(bus => {
     if (filters.priceRange !== 'all') {
-      if (filters.priceRange === 'budget' && bus.price > 40) return false;
-      if (filters.priceRange === 'mid' && (bus.price < 40 || bus.price > 70)) return false;
-      if (filters.priceRange === 'premium' && bus.price < 70) return false;
+      if (filters.priceRange === 'budget' && bus.price > 500) return false;
+      if (filters.priceRange === 'mid' && (bus.price < 500 || bus.price > 1200)) return false;
+      if (filters.priceRange === 'premium' && bus.price < 1200) return false;
     }
-    
+   
     if (filters.busType !== 'all' && bus.type !== filters.busType) return false;
-    
+   
     if (filters.departureTime !== 'all') {
       const hour = parseInt(bus.departureTime.split(':')[0]);
       if (filters.departureTime === 'morning' && (hour < 6 || hour >= 12)) return false;
@@ -70,18 +74,21 @@ const BusList = () => {
       if (filters.departureTime === 'evening' && (hour < 18 || hour >= 24)) return false;
       if (filters.departureTime === 'night' && (hour < 0 || hour >= 6)) return false;
     }
-    
+   
     return true;
   });
+
 
   const handleSelectBus = (bus) => {
     selectBus(bus);
     navigate('/seat-selection');
   };
 
+
   const handleBack = () => {
     navigate('/search');
   };
+
 
   if (loading) {
     return (
@@ -94,61 +101,64 @@ const BusList = () => {
     );
   }
 
+
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 py-12 page-shell">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="bg-white shadow-sm rounded-lg p-4 mb-6">
+        <div className="bg-white shadow-lg rounded-2xl p-6 mb-8 border border-gray-100">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-6">
               <button
                 onClick={handleBack}
-                className="flex items-center text-gray-600 hover:text-gray-900"
+                className="flex items-center text-gray-600 hover:text-gray-900 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors"
               >
-                <ArrowLeftIcon className="h-5 w-5 mr-1" />
+                <ArrowLeftIcon className="h-5 w-5 mr-2" />
                 Back
               </button>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">Available Buses</h1>
-                <p className="text-gray-600">
+                <h1 className="text-3xl font-bold text-gray-900">Available Buses</h1>
+                <p className="text-gray-600 mt-1">
                   {searchCriteria.source} → {searchCriteria.destination} • {searchCriteria.date}
                 </p>
               </div>
             </div>
-            <div className="text-sm text-gray-500">
-              {filteredBuses.length} buses found
+            <div className="bg-blue-50 px-4 py-2 rounded-lg">
+              <span className="text-sm font-semibold text-blue-900">{filteredBuses.length} buses found</span>
             </div>
           </div>
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-6">
+
+        <div className="flex flex-col lg:flex-row gap-8">
           {/* Filters */}
-          <div className="lg:w-64">
-            <div className="bg-white rounded-lg shadow p-6">
-              <h3 className="font-semibold text-gray-900 mb-4">Filters</h3>
-              
+          <div className="lg:w-72">
+            <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-100 sticky top-24">
+              <h3 className="font-bold text-gray-900 text-lg mb-6">Filters</h3>
+             
               {/* Price Range */}
-              <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Price Range</label>
+              <div className="mb-8">
+                <label className="block text-sm font-semibold text-gray-700 mb-3">Price Range</label>
                 <select
                   value={filters.priceRange}
                   onChange={(e) => setFilters({ ...filters, priceRange: e.target.value })}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="form-input py-3 text-base"
                 >
                   <option value="all">All Prices</option>
-                  <option value="budget">Budget ($25-$40)</option>
-                  <option value="mid">Mid-Range ($40-$70)</option>
-                  <option value="premium">Premium ($70+)</option>
+                  <option value="budget">Under ₹500</option>
+                  <option value="mid">₹500 - ₹1200</option>
+                  <option value="premium">₹1200+</option>
                 </select>
               </div>
 
+
               {/* Bus Type */}
-              <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Bus Type</label>
+              <div className="mb-8">
+                <label className="block text-sm font-semibold text-gray-700 mb-3">Bus Type</label>
                 <select
                   value={filters.busType}
                   onChange={(e) => setFilters({ ...filters, busType: e.target.value })}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="form-input py-3 text-base"
                 >
                   <option value="all">All Types</option>
                   <option value="Standard">Standard</option>
@@ -158,13 +168,14 @@ const BusList = () => {
                 </select>
               </div>
 
+
               {/* Departure Time */}
-              <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Departure Time</label>
+              <div className="mb-8">
+                <label className="block text-sm font-semibold text-gray-700 mb-3">Departure Time</label>
                 <select
                   value={filters.departureTime}
                   onChange={(e) => setFilters({ ...filters, departureTime: e.target.value })}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="form-input py-3 text-base"
                 >
                   <option value="all">All Times</option>
                   <option value="morning">Morning (6AM - 12PM)</option>
@@ -176,76 +187,83 @@ const BusList = () => {
             </div>
           </div>
 
+
           {/* Bus List */}
           <div className="flex-1">
             {filteredBuses.length === 0 ? (
-              <div className="bg-white rounded-lg shadow p-8 text-center">
-                <p className="text-gray-500">No buses found matching your criteria.</p>
-                <button
-                  onClick={() => setFilters({ priceRange: 'all', busType: 'all', departureTime: 'all' })}
-                  className="mt-4 text-blue-600 hover:text-blue-500"
-                >
-                  Clear all filters
-                </button>
+              <div className="bg-white rounded-2xl shadow-lg p-12 text-center border border-gray-100">
+                <div className="empty-state">
+                  <TruckIcon className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+                  <p className="text-gray-500 text-lg font-medium">No buses found matching your criteria.</p>
+                  <button
+                    onClick={() => setFilters({ priceRange: 'all', busType: 'all', departureTime: 'all' })}
+                    className="mt-6 text-blue-600 hover:text-blue-500 font-semibold px-4 py-2 rounded-lg hover:bg-blue-50 transition-colors"
+                  >
+                    Clear all filters
+                  </button>
+                </div>
               </div>
             ) : (
-              <div className="space-y-4">
+              <div className="space-y-6">
                 {filteredBuses.map((bus) => (
-                  <div key={bus.id} className="bg-white rounded-lg shadow hover:shadow-md transition-shadow">
-                    <div className="p-6">
+                  <div key={bus.id} className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all border border-gray-100 overflow-hidden">
+                    <div className="p-8">
                       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
                         <div className="flex-1">
-                          <div className="flex items-start justify-between mb-2">
+                          <div className="flex items-start justify-between mb-4">
                             <div>
-                              <h3 className="text-lg font-semibold text-gray-900">{bus.operator}</h3>
-                              <p className="text-sm text-gray-500">{bus.busNumber} • {bus.type}</p>
+                              <h3 className="text-xl font-bold text-gray-900">{bus.operator}</h3>
+                              <p className="text-sm text-gray-500 mt-1">{bus.busNumber} • {bus.type}</p>
                             </div>
-                            <div className="flex items-center">
-                              <StarIcon className="h-4 w-4 text-yellow-400 mr-1" />
-                              <span className="text-sm text-gray-600">{bus.rating}</span>
+                            <div className="text-right">
+                              <div className="text-3xl font-bold text-blue-600">₹{bus.price}</div>
+                              <div className="text-sm text-gray-500 mt-1">per seat</div>
                             </div>
                           </div>
-                          
-                          <div className="flex items-center space-x-6 mb-3">
-                            <div className="flex items-center text-sm text-gray-600">
-                              <ClockIcon className="h-4 w-4 mr-1" />
-                              {bus.departureTime} - {bus.arrivalTime}
+                         
+                          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
+                            <div className="flex items-center space-x-6 mb-3 sm:mb-0">
+                              <div className="flex items-center">
+                                <ClockIcon className="h-5 w-5 text-gray-400 mr-2" />
+                                <span className="text-base font-medium text-gray-900">{bus.departureTime}</span>
+                              </div>
+                              <div className="flex items-center">
+                                <ArrowRightIcon className="h-5 w-5 text-gray-400 mr-2" />
+                                <span className="text-base font-medium text-gray-900">{bus.arrivalTime}</span>
+                              </div>
+                              <div className="flex items-center">
+                                <ClockIcon className="h-5 w-5 text-gray-400 mr-2" />
+                                <span className="text-base text-gray-500">{bus.duration}</span>
+                              </div>
                             </div>
+                            <div className="flex flex-wrap gap-2">
+                              {bus.amenities.map((amenity, index) => (
+                                <span
+                                  key={index}
+                                  className="px-3 py-1 bg-blue-50 text-blue-700 text-xs font-medium rounded-full"
+                                >
+                                  {amenity}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                         
+                          <div className="flex items-center justify-between pt-4 border-t border-gray-100">
                             <div className="text-sm text-gray-600">
-                              {bus.duration}
+                              <span className="font-medium">{bus.availableSeats}</span> seats available
                             </div>
-                            <div className="flex items-center text-sm text-gray-600">
-                              <UserGroupIcon className="h-4 w-4 mr-1" />
-                              {bus.availableSeats}/{bus.totalSeats} seats
-                            </div>
+                            <button
+                              onClick={() => handleSelectBus(bus)}
+                              disabled={bus.availableSeats === 0}
+                              className={`px-6 py-3 text-base font-semibold rounded-xl transition-all ${
+                                bus.availableSeats === 0
+                                  ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                                  : 'bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 shadow-md hover:shadow-lg'
+                              }`}
+                            >
+                              {bus.availableSeats === 0 ? 'Sold Out' : 'Select Seats'}
+                            </button>
                           </div>
-                          
-                          <div className="flex flex-wrap gap-2">
-                            {bus.amenities.map((amenity, index) => (
-                              <span
-                                key={index}
-                                className="px-2 py-1 bg-blue-50 text-blue-700 text-xs rounded-full"
-                              >
-                                {amenity}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                        
-                        <div className="mt-4 lg:mt-0 lg:ml-6 text-center lg:text-right">
-                          <div className="text-2xl font-bold text-gray-900">${bus.price}</div>
-                          <div className="text-sm text-gray-500 mb-3">per person</div>
-                          <button
-                            onClick={() => handleSelectBus(bus)}
-                            disabled={bus.availableSeats === 0}
-                            className={`px-6 py-2 rounded-md font-medium transition-colors ${
-                              bus.availableSeats === 0
-                                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                                : 'bg-blue-600 text-white hover:bg-blue-700'
-                            }`}
-                          >
-                            {bus.availableSeats === 0 ? 'Sold Out' : 'Select Seats'}
-                          </button>
                         </div>
                       </div>
                     </div>
@@ -259,5 +277,6 @@ const BusList = () => {
     </div>
   );
 };
+
 
 export default BusList;

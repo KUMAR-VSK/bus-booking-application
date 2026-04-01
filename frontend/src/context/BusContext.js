@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useState } from 'react';
 
+
 const BusContext = createContext();
+
 
 export const useBus = () => {
   const context = useContext(BusContext);
@@ -10,25 +12,29 @@ export const useBus = () => {
   return context;
 };
 
+
 export const BusProvider = ({ children }) => {
   const [searchCriteria, setSearchCriteria] = useState({
     source: '',
     destination: '',
     date: ''
   });
-  
+ 
   const [selectedBus, setSelectedBus] = useState(null);
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [bookingDetails, setBookingDetails] = useState(null);
+
 
   const updateSearchCriteria = (criteria) => {
     setSearchCriteria(criteria);
   };
 
+
   const selectBus = (bus) => {
     setSelectedBus(bus);
     setSelectedSeats([]);
   };
+
 
   const toggleSeat = (seatNumber) => {
     setSelectedSeats(prev => {
@@ -40,15 +46,18 @@ export const BusProvider = ({ children }) => {
     });
   };
 
+
   const clearSelection = () => {
     setSelectedBus(null);
     setSelectedSeats([]);
     setBookingDetails(null);
   };
 
+
   const setBooking = (details) => {
     setBookingDetails(details);
   };
+
 
   const value = {
     searchCriteria,
@@ -62,9 +71,11 @@ export const BusProvider = ({ children }) => {
     setBooking
   };
 
+
   return (
     <BusContext.Provider value={value}>
       {children}
     </BusContext.Provider>
   );
 };
+

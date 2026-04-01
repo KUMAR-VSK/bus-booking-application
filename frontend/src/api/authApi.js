@@ -30,4 +30,7 @@ export const authApi = {
     const response = await api.post('/auth/logout');
     return response.data;
   },
-};
+}
+
+
+

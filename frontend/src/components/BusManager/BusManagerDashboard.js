@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { 
-  BusIcon,
+import {
+  TruckIcon,
   UserGroupIcon,
   CurrencyDollarIcon,
   CalendarIcon,
@@ -11,6 +11,7 @@ import {
   ChartBarIcon,
   ClockIcon
 } from '@heroicons/react/24/outline';
+
 
 const BusManagerDashboard = () => {
   const [stats, setStats] = useState({
@@ -21,9 +22,10 @@ const BusManagerDashboard = () => {
   });
   const [recentBookings, setRecentBookings] = useState([]);
   const [loading, setLoading] = useState(true);
-  
+ 
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+
 
   // Generate mock data
   useEffect(() => {
@@ -34,7 +36,7 @@ const BusManagerDashboard = () => {
         totalBookings: 156,
         todayRevenue: 3240
       });
-      
+     
       setRecentBookings([
         {
           id: 'BK2024031501',
@@ -67,31 +69,37 @@ const BusManagerDashboard = () => {
           time: '5 hours ago'
         }
       ]);
-      
+     
       setLoading(false);
     }, 1000);
   }, []);
+
 
   const handleLogout = () => {
     logout();
     navigate('/login');
   };
 
+
   const handleAddBus = () => {
     navigate('/manager/add-bus');
   };
+
 
   const handleManageBuses = () => {
     navigate('/manager/buses');
   };
 
+
   const handleViewBookings = () => {
     navigate('/manager/bookings');
   };
 
+
   const handleViewAnalytics = () => {
     navigate('/manager/analytics');
   };
+
 
   if (loading) {
     return (
@@ -104,8 +112,9 @@ const BusManagerDashboard = () => {
     );
   }
 
+
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 page-shell">
       {/* Header */}
       <div className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -126,6 +135,7 @@ const BusManagerDashboard = () => {
         </div>
       </div>
 
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Welcome Section */}
         <div className="bg-white rounded-lg shadow p-6 mb-6">
@@ -144,12 +154,13 @@ const BusManagerDashboard = () => {
           </div>
         </div>
 
+
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
           <div className="bg-white rounded-lg shadow p-6">
             <div className="flex items-center">
               <div className="bg-blue-100 rounded-full p-3">
-                <BusIcon className="h-8 w-8 text-blue-600" />
+                <TruckIcon className="h-8 w-8 text-blue-600" />
               </div>
               <div className="ml-4">
                 <div className="text-2xl font-bold text-gray-900">{stats.totalBuses}</div>
@@ -157,6 +168,7 @@ const BusManagerDashboard = () => {
               </div>
             </div>
           </div>
+
 
           <div className="bg-white rounded-lg shadow p-6">
             <div className="flex items-center">
@@ -170,6 +182,7 @@ const BusManagerDashboard = () => {
             </div>
           </div>
 
+
           <div className="bg-white rounded-lg shadow p-6">
             <div className="flex items-center">
               <div className="bg-purple-100 rounded-full p-3">
@@ -181,6 +194,7 @@ const BusManagerDashboard = () => {
               </div>
             </div>
           </div>
+
 
           <div className="bg-white rounded-lg shadow p-6">
             <div className="flex items-center">
@@ -194,6 +208,7 @@ const BusManagerDashboard = () => {
             </div>
           </div>
         </div>
+
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Recent Bookings */}
@@ -218,7 +233,7 @@ const BusManagerDashboard = () => {
                         <div className="flex items-center justify-between mb-2">
                           <h4 className="font-medium text-gray-900">{booking.customerName}</h4>
                           <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                            booking.status === 'confirmed' 
+                            booking.status === 'confirmed'
                               ? 'bg-green-100 text-green-800'
                               : 'bg-yellow-100 text-yellow-800'
                           }`}>
@@ -240,6 +255,7 @@ const BusManagerDashboard = () => {
             </div>
           </div>
 
+
           {/* Quick Actions */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-lg shadow p-6">
@@ -250,13 +266,14 @@ const BusManagerDashboard = () => {
                   className="w-full flex items-center justify-between p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
                 >
                   <div className="flex items-center">
-                    <BusIcon className="h-5 w-5 text-gray-600 mr-3" />
+                    <TruckIcon className="h-5 w-5 text-gray-600 mr-3" />
                     <span className="font-medium text-gray-900">Manage Buses</span>
                   </div>
                   <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
                 </button>
+
 
                 <button
                   onClick={handleViewBookings}
@@ -271,6 +288,7 @@ const BusManagerDashboard = () => {
                   </svg>
                 </button>
 
+
                 <button
                   onClick={handleViewAnalytics}
                   className="w-full flex items-center justify-between p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
@@ -283,6 +301,7 @@ const BusManagerDashboard = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
                 </button>
+
 
                 <button
                   onClick={handleAddBus}
@@ -305,4 +324,6 @@ const BusManagerDashboard = () => {
   );
 };
 
+
 export default BusManagerDashboard;
+
